@@ -1,6 +1,9 @@
 import exampleVideoData from '../data/exampleVideoData.js';
 import VideoList from './VideoList.js';
 import VideoPlayer from './VideoPlayer.js';
+import Search from './Search.js';
+import searchYouTube from '../lib/searchYouTube.js';
+import YOUTUBE_API_KEY from '../config/youtube.js';
 
 class App extends React.Component {
   constructor(props) {
@@ -8,12 +11,20 @@ class App extends React.Component {
     this.state = {
       list: exampleVideoData,
       player: exampleVideoData[0],
+      search: undefined,
     };
   }
-
+  
   onTitleClick(video) {
     this.setState({
       player: video
+    });
+  }
+
+  setFirstVideos(videos) {
+    this.setState({
+      list: videos,
+      player: videos[0],
     });
   }
 
@@ -22,7 +33,7 @@ class App extends React.Component {
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <div><h5><em>search</em> view goes here</h5></div>
+            <Search text={this.state.search}/>
           </div>
         </nav>
         <div className="row">
@@ -35,6 +46,16 @@ class App extends React.Component {
         </div>
       </div>
     );
+  }
+
+  componentDidMount() {
+    var options = {
+      query: 'puppies',
+      max: 5,
+      key: YOUTUBE_API_KEY,
+    };
+
+    this.props.searchYouTube(options, this.setFirstVideos.bind(this));
   }
 }
 
