@@ -11,7 +11,6 @@ class App extends React.Component {
     this.state = {
       list: exampleVideoData,
       player: exampleVideoData[0],
-      search: undefined,
     };
   }
   
@@ -19,6 +18,16 @@ class App extends React.Component {
     this.setState({
       player: video
     });
+  }
+
+  onSearchInput(query) {
+    var options = {
+      query: query,
+      max: 5,
+      key: YOUTUBE_API_KEY,
+    };
+
+    this.props.searchYouTube(options, this.setFirstVideos.bind(this));
   }
 
   setFirstVideos(videos) {
@@ -33,7 +42,7 @@ class App extends React.Component {
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <Search text={this.state.search}/>
+            <Search onInput={this.onSearchInput.bind(this)}/>
           </div>
         </nav>
         <div className="row">
